@@ -32,6 +32,13 @@ func (bs *BookingService) GetBookingStatus(bookingId string) (string, error) {
 	return bs.repository.GetBookingStatus(bookingId)
 }
 
+func (bs *BookingService) SetBookingStatusDriverNotFound(bookingId string) error {
+	if bookingId == "" {
+		return errors.New("Must provide booking_id")
+	}
+	return bs.repository.SetBookingStatusDriverNotFound(bookingId)
+}
+
 func NewBookingService() *BookingService {
 	return &BookingService{
 		repository: repository.NewBookingRepository(),
