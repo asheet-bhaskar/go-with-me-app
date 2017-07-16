@@ -20,14 +20,22 @@ func CreateBookingHandler(services *service.Services) http.HandlerFunc {
 			return
 		}
 
-		err = services.Booking.CreateBooking(booking)
+		response, err := services.Booking.CreateBooking(booking)
 		if err != nil {
 			logger.Log.Warn(err.Error())
 			http.Error(w, err.Error(), http.StatusUnprocessableEntity)
 			return
 		}
+
+		payload, err := json.Marshal(response)
+		if err != nil {
+			logger.Log.Warn(err.Error())
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
 		w.WriteHeader(http.StatusNoContent)
 		w.Header().Set("Content-Type", "application/json")
-		w.Write([]byte(response))
+		w.Write(payload)
 	}
 }
