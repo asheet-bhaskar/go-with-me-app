@@ -54,3 +54,16 @@ func GetBookingStatusHandler(services *service.Services) http.HandlerFunc {
 		w.Write([]byte(fmt.Sprintf("{\"status\": %v}", status)))
 	}
 }
+
+func DriverNotFoundHandler(services *service.Services) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		bookingId := r.URL.Query().Get("booking_id")
+		err := services.Booking.SetBookingStatusDriverNotFound(bookingId)
+		if err != nil {
+			logger.Log.Warn(err.Error())
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}
+}
