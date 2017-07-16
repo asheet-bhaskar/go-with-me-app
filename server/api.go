@@ -2,12 +2,12 @@ package server
 
 import (
 	"net/http"
+	"os"
 	"strconv"
 	"time"
 
 	"github.com/Sirupsen/logrus"
 	"github.com/codegangsta/negroni"
-	"github.com/heroku/go-with-me-app/config"
 	"github.com/heroku/go-with-me-app/logger"
 )
 
@@ -19,7 +19,7 @@ func StartAPIServer() {
 	server := negroni.New(negroni.NewRecovery())
 	server.Use(httpStatLogger())
 	server.UseHandlerFunc(handlerFunc)
-	portInfo := ":" + strconv.Itoa(config.Port())
+	portInfo := ":" + strconv.Itoa(os.Getenv("PORT"))
 	server.Run(portInfo)
 }
 
