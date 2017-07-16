@@ -6,11 +6,11 @@ import (
 	"github.com/heroku/go-with-me-app/repository"
 )
 
-type bookingService struct {
+type BookingService struct {
 	repository *repository.BookingRepository
 }
 
-func (bs *bookingService) CreateBooking(booking domain.Booking) error {
+func (bs *BookingService) CreateBooking(booking domain.Booking) error {
 	err := domain.Validate(booking)
 	if err != nil {
 		return err
@@ -23,8 +23,8 @@ func (bs *bookingService) CreateBooking(booking domain.Booking) error {
 	return nil
 }
 
-func NewBookingService() *bookingService {
-	return &bookingService{
+func NewBookingService() *BookingService {
+	return &BookingService{
 		repository: repository.NewBookingRepository(),
 	}
 }

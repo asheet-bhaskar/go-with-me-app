@@ -9,6 +9,7 @@ import (
 	"github.com/codegangsta/negroni"
 	"github.com/heroku/go-with-me-app/database"
 	"github.com/heroku/go-with-me-app/logger"
+	"github.com/heroku/go-with-me-app/service"
 )
 
 func StartAPIServer() {
@@ -19,12 +20,13 @@ func StartAPIServer() {
 	}
 
 	logger.Log.Info("Starting `Service API")
-	router := Router()
+	router := Router(service.NewServices())
 	handlerFunc := router.ServeHTTP
 
 	server := negroni.New(negroni.NewRecovery())
 	server.Use(httpStatLogger())
 	server.UseHandlerFunc(handlerFunc)
+	//os.Getenv("PORT")
 	portInfo := ":" + os.Getenv("PORT")
 	server.Run(portInfo)
 }
