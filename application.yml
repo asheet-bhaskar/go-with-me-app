@@ -2,7 +2,7 @@ LOG_LEVEL: "debug"
 APP_PORT: 3000
 host: "localhost"
 port: 5432
-database: "golang-sample-app_test"
+database: "go-with-me-app_test"
 db_user: "postgres"
 password: ""
 pool: 5
