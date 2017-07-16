@@ -6,7 +6,7 @@ import (
 	"github.com/heroku/go-with-me-app/appcontext"
 	"github.com/heroku/go-with-me-app/domain"
 	"github.com/jmoiron/sqlx"
-	"github.com/twinj/uuid"
+	"github.com/satori/go.uuid"
 )
 
 type BookingRepository struct {
