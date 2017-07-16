@@ -1,4 +1,4 @@
-package: source.golabs.io/knowledgebase/golang-sample-app
+package: github.com/heroku/go-with-me-app
 import:
 - package: github.com/Sirupsen/logrus
   version: ^0.10.0
