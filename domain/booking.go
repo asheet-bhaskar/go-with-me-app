@@ -10,15 +10,15 @@ const (
 )
 
 type Booking struct {
-	BookingID   string
-	CustomerID  string
-	DriverID    string
-	PickUp      string
-	Destination string
-	Fare        string
-	Status      string
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
+	BookingID   string    `json:"booking_id"`
+	CustomerID  string    `json:"customer_id"`
+	DriverID    string    `json:"driver_id"`
+	PickUp      string    `json:"pick_up"`
+	Destination string    `json:"destination"`
+	Fare        string    `json:"fare"`
+	Status      string    `json:"status"`
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
 }
 
 func Validate(booking Booking) error {
