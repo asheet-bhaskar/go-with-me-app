@@ -1,6 +1,8 @@
 package appcontext
 
 import (
+	"os"
+
 	"github.com/heroku/go-with-me-app/config"
 	"github.com/heroku/go-with-me-app/logger"
 	"github.com/jmoiron/sqlx"
@@ -24,7 +26,7 @@ func panicIfError(err error, werr error) {
 }
 
 func initDB() *sqlx.DB {
-	db, err := sqlx.Open("postgres", config.DatabaseConfig().ConnectionString())
+	db, err := sqlx.Open("postgres", os.Getenv("DATABASE_URL"))
 	if err != nil {
 		logger.Log.Fatalf("failed to load the database: %s", err)
 	}
