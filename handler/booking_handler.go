@@ -21,6 +21,7 @@ func CreateBookingHandler(services *service.Services) http.HandlerFunc {
 		}
 
 		response, err := services.Booking.CreateBooking(booking)
+
 		if err != nil {
 			logger.Log.Warn(err.Error())
 			http.Error(w, err.Error(), http.StatusUnprocessableEntity)
@@ -33,8 +34,6 @@ func CreateBookingHandler(services *service.Services) http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-
-		w.WriteHeader(http.StatusNoContent)
 		w.Header().Set("Content-Type", "application/json")
 		w.Write(payload)
 	}

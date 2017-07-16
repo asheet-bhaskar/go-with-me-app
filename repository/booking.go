@@ -6,6 +6,7 @@ import (
 	"github.com/heroku/go-with-me-app/appcontext"
 	"github.com/heroku/go-with-me-app/domain"
 	"github.com/jmoiron/sqlx"
+	"github.com/twinj/uuid"
 )
 
 type BookingRepository struct {
@@ -18,6 +19,7 @@ const (
 
 func (br *BookingRepository) CreateBooking(booking *domain.Booking) error {
 	now := time.Now()
+	booking.BookingID = uuid.NewV4().String()
 	booking.CreatedAt = now
 	booking.UpdatedAt = now
 	booking.Status = "created"

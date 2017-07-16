@@ -15,4 +15,4 @@ import:
     - package: github.com/mattes/migrate
     - package: github.com/bluele/factory-go/factory
       version: 037d52eaae310c951822d582dec6d0b42637fcd2
-    - package: github.com/twinj/uuid
+    - package: github.com/satori/go.uuid
