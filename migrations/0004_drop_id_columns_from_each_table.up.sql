@@ -1,0 +1,3 @@
+ALTER TABLE bookings DROP COLUMN id;
+ALTER TABLE customers DROP COLUMN id;
+ALTER TABLE drivers DROP COLUMN id;
