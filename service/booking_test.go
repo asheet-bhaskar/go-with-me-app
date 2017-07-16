@@ -28,8 +28,9 @@ func TestCreateBookingReturnsErrorIfCustomerIdMissing(t *testing.T) {
 			"PickUp":      "100, 100",
 			"Destination": "111, 111",
 			"Fare":        "10000.0"})
-		err := NewBookingService().CreateBooking(*booking)
+		res, err := NewBookingService().CreateBooking(*booking)
 		assert.NotNil(t, err)
+		assert.Equal(t, domain.Booking{}, res)
 	})
 }
 
@@ -42,8 +43,9 @@ func TestCreateBookingReturnsErrorIfPickUpMissing(t *testing.T) {
 			"CustomerID":  "111",
 			"Destination": "111, 111",
 			"Fare":        "10000.0"})
-		err := NewBookingService().CreateBooking(*booking)
+		res, err := NewBookingService().CreateBooking(*booking)
 		assert.NotNil(t, err)
+		assert.Equal(t, domain.Booking{}, res)
 	})
 }
 
@@ -56,8 +58,9 @@ func TestCreateBookingReturnsErrorIfDestinationMissing(t *testing.T) {
 			"CustomerID": "111",
 			"PickUp":     "100, 100",
 			"Fare":       "10000.0"})
-		err := NewBookingService().CreateBooking(*booking)
+		res, err := NewBookingService().CreateBooking(*booking)
 		assert.NotNil(t, err)
+		assert.Equal(t, domain.Booking{}, res)
 	})
 }
 
@@ -70,8 +73,9 @@ func TestCreateBookingReturnsErrorIfFareMissing(t *testing.T) {
 			"CustomerID":  "111",
 			"PickUp":      "100, 100",
 			"Destination": "111, 111"})
-		err := NewBookingService().CreateBooking(*booking)
+		res, err := NewBookingService().CreateBooking(*booking)
 		assert.NotNil(t, err)
+		assert.Equal(t, domain.Booking{}, res)
 	})
 }
 
@@ -85,8 +89,14 @@ func TestCreateBookingReturnsNilAndPersistBooking(t *testing.T) {
 			"PickUp":      "100, 100",
 			"Destination": "111, 111",
 			"Fare":        "10000.0"})
-		err := NewBookingService().CreateBooking(*booking)
+		res, err := NewBookingService().CreateBooking(*booking)
 		assert.Nil(t, err)
+		assert.Equal(t, res.CustomerID, booking.CustomerID)
+		assert.Equal(t, res.PickUp, booking.PickUp)
+		assert.Equal(t, res.Destination, booking.Destination)
+		assert.Equal(t, res.Fare, booking.Fare)
+		assert.NotNil(t, res.CreatedAt)
+		assert.NotNil(t, res.UpdatedAt)
 	})
 }
 

@@ -10,17 +10,17 @@ type BookingService struct {
 	repository *repository.BookingRepository
 }
 
-func (bs *BookingService) CreateBooking(booking domain.Booking) error {
+func (bs *BookingService) CreateBooking(booking domain.Booking) (domain.Booking, error) {
 	err := domain.Validate(booking)
 	if err != nil {
-		return err
+		return domain.Booking{}, err
 	}
 	err = bs.repository.CreateBooking(&booking)
 	if err != nil {
 		logger.Log.Info("failed to create the booking")
-		return err
+		return domain.Booking{}, err
 	}
-	return nil
+	return booking, nil
 }
 
 func NewBookingService() *BookingService {

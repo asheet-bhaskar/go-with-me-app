@@ -27,5 +27,7 @@ func CreateBookingHandler(services *service.Services) http.HandlerFunc {
 			return
 		}
 		w.WriteHeader(http.StatusNoContent)
+		w.Header().Set("Content-Type", "application/json")
+		w.Write([]byte(response))
 	}
 }
