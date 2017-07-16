@@ -14,7 +14,8 @@ type BookingRepository struct {
 }
 
 const (
-	createBookingQuery = `INSERT INTO bookings (booking_id, customer_id, driver_id, pick_up, destination, fare, status, created_at, updated_at) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9);`
+	createBookingQuery    = `INSERT INTO bookings (booking_id, customer_id, driver_id, pick_up, destination, fare, status, created_at, updated_at) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9);`
+	getBookingStatusQuery = `SELECT status FROM bookings WHERE booking_id=$1;`
 )
 
 func (br *BookingRepository) CreateBooking(booking *domain.Booking) error {
@@ -34,6 +35,15 @@ func (br *BookingRepository) CreateBooking(booking *domain.Booking) error {
 		booking.CreatedAt,
 		booking.UpdatedAt)
 	return err
+}
+
+func (br *BookingRepository) GetBookingStatus(bookingId string) (string, error) {
+	var status string
+	err := br.db.Get(&status, getBookingStatusQuery, bookingId)
+	if err != nil {
+		return status, err
+	}
+	return status, nil
 }
 
 func NewBookingRepository() *BookingRepository {

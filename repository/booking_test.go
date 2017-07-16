@@ -40,6 +40,40 @@ func TestCreateBookingWithUpdatedTimeFields(t *testing.T) {
 	})
 }
 
+func TestGetStatusReturnsErrorWhenBookingNotPresentInDatabase(t *testing.T) {
+	config.Load()
+	logger.SetupLogger()
+	appcontext.Initiate()
+	withCleanDB(func() {
+		bookingId := "111"
+		expectedStatus := ""
+		observedStatus, err := NewBookingRepository().GetBookingStatus(bookingId)
+		assert.NotNil(t, err)
+		assert.Equal(t, expectedStatus, observedStatus)
+	})
+}
+
+func TestGetStatusReturnsErrorWhenBookingPresentInDatabase(t *testing.T) {
+	config.Load()
+	logger.SetupLogger()
+	appcontext.Initiate()
+	withCleanDB(func() {
+		expectedStatus := "created"
+		booking := createBooking(map[string]interface{}{
+			"CustomerID":  "111",
+			"Status":      "CREATED",
+			"PickUp":      "100, 100",
+			"Destination": "111, 111",
+			"Fare":        "10000.0"})
+		err := NewBookingRepository().CreateBooking(booking)
+		assert.Nil(t, err)
+
+		observedStatus, err := NewBookingRepository().GetBookingStatus(booking.BookingID)
+		assert.Nil(t, err)
+		assert.Equal(t, expectedStatus, observedStatus)
+	})
+}
+
 func createBooking(data map[string]interface{}) *domain.Booking {
 	return factories.BookingFactory.MustCreateWithOption(data).(*domain.Booking)
 }
