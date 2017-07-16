@@ -2,9 +2,8 @@ package database
 
 import (
 	"fmt"
+	"os"
 	"strings"
-
-	"github.com/heroku/go-with-me-app/config"
 
 	_ "github.com/mattes/migrate/driver/postgres"
 	"github.com/mattes/migrate/migrate"
@@ -13,7 +12,7 @@ import (
 const dbMigrationsPath = "./migrations"
 
 func RunDatabaseMigrations() error {
-	allErrors, ok := migrate.UpSync(config.DatabaseConfig().ConnectionURL(), dbMigrationsPath)
+	allErrors, ok := migrate.UpSync(os.Getenv("DATABASE_URL"), dbMigrationsPath)
 	if !ok {
 		return joinErrors(allErrors)
 	}

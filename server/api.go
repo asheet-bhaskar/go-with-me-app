@@ -7,10 +7,17 @@ import (
 
 	"github.com/Sirupsen/logrus"
 	"github.com/codegangsta/negroni"
+	"github.com/heroku/go-with-me-app/database"
 	"github.com/heroku/go-with-me-app/logger"
 )
 
 func StartAPIServer() {
+	logger.Log.Infof("Running database migrations")
+	err := database.RunDatabaseMigrations()
+	if err != nil {
+		logger.Log.Infof("database migration failed.")
+	}
+
 	logger.Log.Info("Starting `Service API")
 	router := Router()
 	handlerFunc := router.ServeHTTP
