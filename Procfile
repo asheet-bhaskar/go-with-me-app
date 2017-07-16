@@ -1,1 +1,1 @@
-web: go-with-me-application start
+web: go-with-me-app start
