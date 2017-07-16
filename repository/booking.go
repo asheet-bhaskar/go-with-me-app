@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"errors"
 	"time"
 
 	"github.com/heroku/go-with-me-app/appcontext"
@@ -41,7 +42,7 @@ func (br *BookingRepository) GetBookingStatus(bookingId string) (string, error) 
 	var status string
 	err := br.db.Get(&status, getBookingStatusQuery, bookingId)
 	if err != nil {
-		return status, err
+		return status, errors.New("Booking not found in the database")
 	}
 	return status, nil
 }
