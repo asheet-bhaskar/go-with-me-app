@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/heroku/go-with-me-app/domain"
@@ -36,5 +37,20 @@ func CreateBookingHandler(services *service.Services) http.HandlerFunc {
 		}
 		w.Header().Set("Content-Type", "application/json")
 		w.Write(payload)
+	}
+}
+
+func GetBookingStatusHandler(services *service.Services) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		bookingId := r.URL.Query().Get("booking_id")
+		status, err := services.Booking.GetBookingStatus(bookingId)
+		if err != nil {
+			logger.Log.Warn(err.Error())
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.Write([]byte(fmt.Sprintf("{\"status\": %v}", status)))
 	}
 }
