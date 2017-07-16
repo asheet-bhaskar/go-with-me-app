@@ -100,6 +100,37 @@ func TestCreateBookingReturnsNilAndPersistBooking(t *testing.T) {
 	})
 }
 
+func TestGetBookingStatusReturnsErrorIfBookingIdIsEmpty(t *testing.T) {
+	config.Load()
+	logger.SetupLogger()
+	appcontext.Initiate()
+	bookingId := ""
+	expectedStatus := ""
+	observedStatus, err := NewBookingService().GetBookingStatus(bookingId)
+	assert.NotNil(t, err)
+	assert.Equal(t, expectedStatus, observedStatus)
+}
+
+func TestGetBookingStatusReturnsNilIfBookingIdIsPresent(t *testing.T) {
+	config.Load()
+	logger.SetupLogger()
+	appcontext.Initiate()
+	withCleanDB(func() {
+		expectedStatus := "created"
+		booking := createBooking(map[string]interface{}{
+			"CustomerID":  "111",
+			"PickUp":      "100, 100",
+			"Destination": "111, 111",
+			"Fare":        "10000.0"})
+		res, err := NewBookingService().CreateBooking(*booking)
+		assert.Nil(t, err)
+
+		observedStatus, err := NewBookingService().GetBookingStatus(res.BookingID)
+		assert.Nil(t, err)
+		assert.Equal(t, expectedStatus, observedStatus)
+	})
+}
+
 func createBooking(data map[string]interface{}) *domain.Booking {
 	return factories.BookingFactory.MustCreateWithOption(data).(*domain.Booking)
 }
