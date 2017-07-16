@@ -3,7 +3,6 @@ package server
 import (
 	"net/http"
 	"os"
-	"strconv"
 	"time"
 
 	"github.com/Sirupsen/logrus"
@@ -19,7 +18,7 @@ func StartAPIServer() {
 	server := negroni.New(negroni.NewRecovery())
 	server.Use(httpStatLogger())
 	server.UseHandlerFunc(handlerFunc)
-	portInfo := ":" + strconv.Itoa(os.Getenv("PORT"))
+	portInfo := ":" + os.Getenv("PORT")
 	server.Run(portInfo)
 }
 
