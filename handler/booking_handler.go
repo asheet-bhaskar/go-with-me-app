@@ -67,3 +67,19 @@ func DriverNotFoundHandler(services *service.Services) http.HandlerFunc {
 		w.WriteHeader(http.StatusNoContent)
 	}
 }
+
+func handlerEstimateFareHandler(services *service.Services) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		distance := r.URL.Query().Get("distance")
+		fare, err := services.Booking.EstimateFare(distance)
+		if err != nil {
+			logger.Log.Warn(err.Error())
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.Write([]byte(fmt.Sprintf("{\"estimate_fare\": %v}", fare)))
+	}
+
+}
