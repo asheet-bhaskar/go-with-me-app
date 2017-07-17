@@ -68,7 +68,7 @@ func DriverNotFoundHandler(services *service.Services) http.HandlerFunc {
 	}
 }
 
-func handlerEstimateFareHandler(services *service.Services) http.HandlerFunc {
+func EstimateFareHandler(services *service.Services) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		distance := r.URL.Query().Get("distance")
 		fare, err := services.Booking.EstimateFare(distance)
