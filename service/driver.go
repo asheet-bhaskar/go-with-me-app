@@ -36,7 +36,21 @@ func (ds *DriverService) GetDriverStatus(driverId string) (string, error) {
 	if driverId == "" {
 		return "", errors.New("Must provide driver_id")
 	}
-	return ds.GetDriverStatus(driverId)
+	return ds.repository.GetDriverStatus(driverId)
+}
+
+func (ds *DriverService) CompleteTrip(driverId string, bookingId string) error {
+	if driverId == "" || bookingId == "" {
+		return errors.New("Must provide driver_id and bookingId")
+	}
+	return ds.repository.CompleteTrip(driverId, bookingId)
+}
+
+func (ds *DriverService) StartTrip(driverId string, bookingId string) error {
+	if driverId == "" || bookingId == "" {
+		return errors.New("Must provide driver_id and bookingId")
+	}
+	return ds.repository.StartTrip(driverId, bookingId)
 }
 
 func NewDriverService() *DriverService {
