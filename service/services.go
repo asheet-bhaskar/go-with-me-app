@@ -1,11 +1,15 @@
 package service
 
 type Services struct {
-	Booking BookingService
+	Booking  BookingService
+	Customer CustomerService
+	Driver   DriverService
 }
 
 func NewServices() *Services {
 	return &Services{
-		Booking: *NewBookingService(),
+		Booking:  *NewBookingService(),
+		Driver:   *NewDriverService(),
+		Customer: *NewCustomerService(),
 	}
 }
