@@ -17,7 +17,9 @@ type DriverRepository struct {
 const (
 	createDriverQuery       = `INSERT INTO drivers (driver_id, name, email, status, updated_at, created_at) VALUES($1, $2, $3, $4, $5, $6);`
 	updateDriverStatusQurry = `UPDATE drivers set status=$1 WHERE driver_id=$2;`
-	getDriverStatusQuery    = `SELECT status FROM bookings WHERE driver_id=$1;`
+	getDriverStatusQuery    = `SELECT status FROM drivers WHERE driver_id=$1;`
+	StartTripQuery          = `UPDATE bookings SET driver_id = $1, status=$2 WHERE booking_id=$3;`
+	CompleteTripQuery       = `UPDATE bookings SET status=$1 WHERE booking_id=$2;`
 )
 
 func (dr *DriverRepository) CreateDriver(driver *domain.Driver) error {
@@ -44,13 +46,40 @@ func (dr *DriverRepository) UpdateDriverStatus(driverId string, status string) e
 	return nil
 }
 
-func (dr *DriverRepository) GetBookingStatus(driverId string) (string, error) {
+func (dr *DriverRepository) GetDriverStatus(driverId string) (string, error) {
 	var status string
 	err := dr.db.Get(&status, getDriverStatusQuery, driverId)
 	if err != nil {
 		return status, errors.New("driver not found in the database")
 	}
 	return status, nil
+}
+
+func (dr *DriverRepository) StartTrip(driverId string, bookingId string) error {
+	err := dr.UpdateDriverStatus(driverId, "completing_booking")
+	if err != nil {
+		return errors.New("failed to update the driver status")
+	}
+
+	_, err = dr.db.Exec(StartTripQuery, driverId, "ongoing", bookingId)
+
+	if err != nil {
+		return errors.New("failed to update the booking status to ongoing")
+	}
+	return nil
+}
+
+func (dr *DriverRepository) CompleteTrip(driverId string, bookingId string) error {
+	_, err := dr.db.Exec(CompleteTripQuery, "completed", bookingId)
+	if err != nil {
+		return errors.New("failed to update the booking status to ongoing")
+	}
+
+	err = dr.UpdateDriverStatus(driverId, "available")
+	if err != nil {
+		return errors.New("failed to update the driver status")
+	}
+	return nil
 }
 
 func NewDriverRepository() *DriverRepository {
