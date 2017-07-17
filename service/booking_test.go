@@ -1,6 +1,8 @@
 package service
 
 import (
+	"os"
+	"strconv"
 	"testing"
 
 	"github.com/heroku/go-with-me-app/appcontext"
@@ -156,6 +158,43 @@ func TestSetBookingStatusDriverNotFoundReturnsNilIfBookingIdIsPresent(t *testing
 		err = NewBookingService().SetBookingStatusDriverNotFound(res.BookingID)
 		assert.Nil(t, err)
 	})
+}
+
+func TestEstimateFareReturnsFareZeroAndErrorIfDistanceNotProvided(t *testing.T) {
+	config.Load()
+	logger.SetupLogger()
+	appcontext.Initiate()
+	distance := ""
+	estimatedFare := float64(0)
+	observedFare, err := NewBookingService().EstimateFare(distance)
+	assert.Equal(t, estimatedFare, observedFare)
+	assert.NotNil(t, err)
+}
+
+func TestEstimateFareReturnsFareZeroAndErrorIfInvalidDistance(t *testing.T) {
+	config.Load()
+	logger.SetupLogger()
+	appcontext.Initiate()
+	distance := "abc"
+	estimatedFare := float64(0)
+	observedFare, err := NewBookingService().EstimateFare(distance)
+	assert.Equal(t, estimatedFare, observedFare)
+	assert.NotNil(t, err)
+}
+func TestEstimateFareReturnsFareAndNilErrorIfValidDistance(t *testing.T) {
+	config.Load()
+	logger.SetupLogger()
+	appcontext.Initiate()
+	distance := "9.5"
+	os.Setenv("FARE_RATE", "2500")
+	fareRateFloat, err := strconv.ParseFloat(os.Getenv("FARE_RATE"), 64)
+	assert.Nil(t, err)
+
+	estimatedFare := 9.5 * fareRateFloat
+	observedFare, err := NewBookingService().EstimateFare(distance)
+	assert.Equal(t, estimatedFare, observedFare)
+	assert.Nil(t, err)
+	os.Unsetenv("FARE_RATE")
 }
 
 func createBooking(data map[string]interface{}) *domain.Booking {

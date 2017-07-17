@@ -2,6 +2,8 @@ package service
 
 import (
 	"errors"
+	"os"
+	"strconv"
 
 	"github.com/heroku/go-with-me-app/domain"
 	"github.com/heroku/go-with-me-app/logger"
@@ -37,6 +39,20 @@ func (bs *BookingService) SetBookingStatusDriverNotFound(bookingId string) error
 		return errors.New("Must provide booking_id")
 	}
 	return bs.repository.SetBookingStatusDriverNotFound(bookingId)
+}
+
+func (bs *BookingService) EstimateFare(distance string) (float64, error) {
+	distanceFloat, err := strconv.ParseFloat(distance, 64)
+	if err != nil {
+		return 0.0, errors.New("failed to parse the distance")
+	}
+
+	fareRateFloat, err := strconv.ParseFloat(os.Getenv("FARE_RATE"), 64)
+	if err != nil {
+		return 0.0, errors.New("failed to get the fare rate")
+	}
+
+	return distanceFloat * fareRateFloat, nil
 }
 
 func NewBookingService() *BookingService {
