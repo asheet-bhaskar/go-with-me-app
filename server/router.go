@@ -18,7 +18,9 @@ func Router(services *service.Services) http.Handler {
 	router.HandleFunc("/v1/customer/create", handler.CreateCustomerHandler(services)).Methods("POST")
 	router.HandleFunc("/v1/driver/create", handler.CreateDriverHandler(services)).Methods("POST")
 	router.HandleFunc("/v1/driver/status", handler.DriverStatusUpdateHandler(services)).Methods("PUT")
-	router.HandleFunc("/v1/driver/status", handler.DriverStatusUpdateHandler(services)).Methods("GET")
+	router.HandleFunc("/v1/driver/status", handler.GetDriverStatusHandler(services)).Methods("GET")
+	router.HandleFunc("/v1/trip/start", handler.StartTripHandler(services)).Methods("PUT")
+	router.HandleFunc("/v1/trip/complete", handler.CompleteTripHandler(services)).Methods("PUT")
 	router.NotFoundHandler = http.HandlerFunc(handler.NotFoundHandler)
 	return router
 }
